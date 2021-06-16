@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: atldev4-jmeter-test-pod
+  namespace: cloudimanage
+  labels:
+        app.kubernetes.io/instance: atldev4-jmeter-test-pod
+        app.kubernetes.io/name: atldev4-jmeter-test-pod
+spec:
+  containers:
+    - env:
+        - name: CONTAINER_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: JMETER_OPTS
+          value: -Dnumber_of_threads=100 -Dramp_up_time_seconds=60 -Dtest_duration_seconds=3600
+        - name: JMETER_TEST
+          value: supervised-import-with-delete
+      image: 'docker.sretools.io/unverified/adrian/jmeter-docker:1.0.0'
+      imagePullPolicy: Always
+      name: jmeter-docker
+      resources:
+        limits:
+          cpu: 2000m
+          memory: 2Gi
+  imagePullSecrets:
+    - name: regcred
+  securityContext: {}
+  serviceAccountName: cloudimanage
