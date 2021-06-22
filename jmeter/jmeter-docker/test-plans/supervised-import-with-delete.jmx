@@ -48,6 +48,21 @@
               <stringProp name="Argument.value">${__P(test_duration_seconds,60)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
+            <elementProp name="customer_id" elementType="Argument">
+              <stringProp name="Argument.name">customer_id</stringProp>
+              <stringProp name="Argument.value">${__P(customer_id,516)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="library_name" elementType="Argument">
+              <stringProp name="Argument.name">library_name</stringProp>
+              <stringProp name="Argument.value">${__P(library_name,ATLDEV4POD1)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="folder_number" elementType="Argument">
+              <stringProp name="Argument.name">folder_number</stringProp>
+              <stringProp name="Argument.value">${__P(folder_number,6)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
           </collectionProp>
         </Arguments>
         <hashTree/>
@@ -56,7 +71,7 @@
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="script">println(&quot;Starting ${number_of_threads} concurrent threads for ${test_duration_seconds}s with a ${ramp_up_time_seconds}s ramp up time&quot;)
-</stringProp>
+println(&quot;Using\n:customer_id=${customer_id}\nlibrary_name=${library_name}\nfolder_number=${folder_number}&quot;)</stringProp>
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Sampler>
         <hashTree/>
@@ -290,7 +305,7 @@ trickle test&#xd;
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">work/web/api/v2/customers/516/libraries/ATLDEV4POD2/folders/ATLDEV4POD2!6/documents/import</stringProp>
+          <stringProp name="HTTPSampler.path">work/web/api/v2/customers/${customer_id}/libraries/${library_name}/folders/${library_name}!${folder_number}/documents/import</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -337,10 +352,10 @@ trickle test&#xd;
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
-            <stringProp name="script">if(vars.get(&quot;suggestedWaitTime&quot;) != null){
-Integer sleepTime = vars.get(&quot;suggestedWaitTime&quot;) as Integer
-out.println(&quot;Will sleep for &quot; + vars.get(&quot;suggestedWaitTime&quot;) + &quot; seconds&quot; );
-sleep(sleepTime * 1000)	
+            <stringProp name="script">if (vars.get(&quot;suggestedWaitTime&quot;) != null) {
+	Integer sleepTime = vars.get(&quot;suggestedWaitTime&quot;) as Integer
+	out.println(&quot;Will sleep for &quot; + vars.get(&quot;suggestedWaitTime&quot;) + &quot; seconds&quot; );
+	sleep(sleepTime * 1000)	
 }</stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223PostProcessor>
@@ -364,8 +379,8 @@ sleep(sleepTime * 1000)
             <stringProp name="parameters"></stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">if(vars.get(&quot;docToDelete&quot;) != null){
-out.println(&quot;Doc to delete: &quot; + vars.get(&quot;docToDelete&quot;) );	
+            <stringProp name="script">if (vars.get(&quot;docToDelete&quot;) != null) {
+	out.println(&quot;Doc to delete: &quot; + vars.get(&quot;docToDelete&quot;) );	
 }</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
@@ -378,7 +393,7 @@ out.println(&quot;Doc to delete: &quot; + vars.get(&quot;docToDelete&quot;) );
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">work/web/api/v2/customers/516/libraries/ATLDEV4POD2/documents/${docToDelete}</stringProp>
+          <stringProp name="HTTPSampler.path">work/web/api/v2/customers/${customer_id}/libraries/${library_name}/documents/${docToDelete}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -401,6 +416,27 @@ out.println(&quot;Doc to delete: &quot; + vars.get(&quot;docToDelete&quot;) );
               </elementProp>
             </collectionProp>
           </HeaderManager>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Wait Time Extractor" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+            <stringProp name="RegexExtractor.refname">suggestedWaitTime</stringProp>
+            <stringProp name="RegexExtractor.regex">x-ratelimit-reset:\s(.+)</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">60</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="Sample.scope">all</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">if (vars.get(&quot;suggestedWaitTime&quot;) != null) {
+	Integer sleepTime = vars.get(&quot;suggestedWaitTime&quot;) as Integer
+	println(&quot;Failed to delete &quot; + vars.get(&quot;docToDelete&quot;) + &quot; Suggested sleep time was: &quot; + sleepTime);
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">

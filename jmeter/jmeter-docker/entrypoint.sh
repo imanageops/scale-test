@@ -23,6 +23,18 @@ if ! expr "${JMETER_OPTS}" : '.*-Dtest_duration_seconds=.*' > /dev/null ; then
   echo "Did not find -Dtest_duration_seconds in the configuration. Using default value."
   export JMETER_OPTS="${JMETER_OPTS} -Dtest_duration_seconds=60"
 fi
+if ! expr "${JMETER_OPTS}" : '.*-Dcustomer_id=.*' > /dev/null ; then
+  echo "Did not find -Dcustomer_id in the configuration. Using default value."
+  export JMETER_OPTS="${JMETER_OPTS} -Dcustomer_id=516"
+fi
+if ! expr "${JMETER_OPTS}" : '.*-Dlibrary_name=.*' > /dev/null ; then
+  echo "Did not find -Dlibrary_name in the configuration. Using default value."
+  export JMETER_OPTS="${JMETER_OPTS} -Dlibrary_name=ATLDEV4POD1"
+fi
+if ! expr "${JMETER_OPTS}" : '.*-Dfolder_number=.*' > /dev/null ; then
+  echo "Did not find -Dfolder_number in the configuration. Using default value."
+  export JMETER_OPTS="${JMETER_OPTS} -Dfolder_number=9"
+fi
 
 echo "JMETER_OPTS=${JMETER_OPTS}"
 

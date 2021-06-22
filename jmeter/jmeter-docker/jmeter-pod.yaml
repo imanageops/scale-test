@@ -14,10 +14,11 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: JMETER_OPTS
-          value: -Dnumber_of_threads=100 -Dramp_up_time_seconds=60 -Dtest_duration_seconds=3600
+          value: >
+            -Dnumber_of_threads=100 -Dramp_up_time_seconds=60 -Dtest_duration_seconds=3600 -Dcustomer_id=516 -Dlibrary_name=ATLDEV4POD1 -Dfolder_number=9
         - name: JMETER_TEST
           value: supervised-import-with-delete
-      image: 'docker.sretools.io/unverified/adrian/jmeter-docker:1.0.0'
+      image: 'docker.sretools.io/unverified/adrian/jmeter-docker:1.0.12'
       imagePullPolicy: Always
       name: jmeter-docker
       resources:
