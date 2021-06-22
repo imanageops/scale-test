@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.gatling.demo</groupId>
-  <artifactId>preview-load-test</artifactId>
+  <artifactId>gatling-docker</artifactId>
   <version>3.6.0</version>
 
   <properties>
