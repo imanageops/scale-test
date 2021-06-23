@@ -11,6 +11,10 @@ mkdir -p "${report_dir}"
 
 echo "Outputting reports to ${report_dir}"
 
+if [ "$(echo "${ENVIRONMENT}" | tr '[:upper:]' '[:lower:]')" = "atldev4" ]; then
+  printf "# atldev4 entry\n20.84.176.25\tatldev1.imanagelabs.com\n" | tee -a /etc/hosts > /dev/null
+fi
+
 if ! expr "${JMETER_OPTS}" : '.*-Dnumber_of_threads=.*' > /dev/null ; then
     echo "Did not find -Dnumber_of_threads in the configuration. Using default value."
     export JMETER_OPTS="${JMETER_OPTS} -Dnumber_of_threads=10"
