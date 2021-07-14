@@ -12,7 +12,7 @@ mkdir -p "${report_dir}"
 echo "Outputting reports to ${report_dir}"
 
 if [ "$(echo "${ENVIRONMENT}" | tr '[:upper:]' '[:lower:]')" = "atldev4" ]; then
-  printf "# atldev4 entry\n20.84.176.25\tatldev1.imanagelabs.com\n" | tee -a /etc/hosts > /dev/null
+  printf "# atldev4 entry\n10.0.74.201\tatldev1.imanagelabs.com\n" | tee -a /etc/hosts > /dev/null
 fi
 
 if ! expr "${JMETER_OPTS}" : '.*-Dnumber_of_threads=.*' > /dev/null ; then

@@ -11,9 +11,7 @@ ADD target/dependency /gatling-charts-highcharts-bundle-${GATLING_VERSION}/lib
 
 RUN apt-get update && \
     apt-get install -y unzip && \
-    unzip -u /gatling-charts-highcharts-bundle-${GATLING_VERSION}-bundle.zip && \
-    rm -rf /gatling-charts-highcharts-bundle-${GATLING_VERSION}-bundle.zip \
-           /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/simulations/* \
+    rm -rf /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/simulations/* \
            /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/resources/*
 
 ADD src/test/scala /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/simulations
