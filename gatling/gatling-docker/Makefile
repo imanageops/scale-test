@@ -1,6 +1,6 @@
 .PHONY: all clean package deploy gatling-docker
 
-GATLING_VERSION=3.6.0
+GATLING_VERSION=3.6.1
 
 all: download package gatling-docker
 
@@ -18,5 +18,5 @@ download:
 ifeq ($(wildcard ./target/gatling-charts-highcharts-bundle-$(GATLING_VERSION)-bundle.zip),)
 	mkdir -p target
 	@echo "Did not find gatling-charts-highcharts-bundle-$(GATLING_VERSION)-bundle.zip. Downloading..."
-	$() curl -Lo "target/gatling-charts-highcharts-bundle-$(GATLING_VERSION)-bundle.zip" "https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/$(GATLING_VERSION)/gatling-charts-highcharts-bundle-$(GATLING_VERSION).zip"
+	$() curl -Lo "target/gatling-charts-highcharts-bundle-$(GATLING_VERSION)-bundle.zip" "https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/$(GATLING_VERSION)/gatling-charts-highcharts-bundle-$(GATLING_VERSION)-bundle.zip"
 endif
