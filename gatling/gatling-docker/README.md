@@ -5,6 +5,8 @@ Simple showcase of a maven project using the gatling-maven-plugin.
 
 To test it out, simply execute the following command:
 
+Navigate to gatling-docker directory: 
+
     $mvn gatling:test -Dgatling.simulationClass=computerdatabase.BasicSimulation
 
 or simply:
