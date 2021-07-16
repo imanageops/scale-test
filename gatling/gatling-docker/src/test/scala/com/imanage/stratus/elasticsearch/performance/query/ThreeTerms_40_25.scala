@@ -1,4 +1,4 @@
-package com.imanage.stratus.elasticsearch.performance.query;
+package com.imanage.stratus.elasticsearch.performance.query
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 
 /*
 * Test scenario :
-* Single term ES query, 40 users, 25 queries each
+* Three terms ES query, 40 users, 25 queries each
 * */
-class SingleTerm_40_25 extends Simulation {
+class ThreeTerms_40_25 extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
   val esBaseUrl = System.getProperty("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
   val esUser = System.getProperty("ES_USER", "healthcheck")
@@ -34,6 +34,8 @@ class SingleTerm_40_25 extends Simulation {
   val custIdFeeder = Array(Map("custId" -> custId)).circular
   val libIdFeeder = Array(Map("libId" -> libId)).circular
   val feeder1 = csv("com/imanage/stratus/elasticsearch/feeder/dict1.csv").random
+  val feeder2 = csv("com/imanage/stratus/elasticsearch/feeder/dict2.csv").random
+  val feeder3 = csv("com/imanage/stratus/elasticsearch/feeder/dict3.csv").random
   logger.info("ES Base URL: " + esBaseUrl)
   logger.info("ES user: " + esUser)
   logger.info("ES pod name: " + podName)
@@ -43,13 +45,13 @@ class SingleTerm_40_25 extends Simulation {
   logger.info("Test scenario per user : " + scenarioRepeatCount)
   val scn = scenario("ElasticQueryDirect")
     .repeat(scenarioRepeatCount) {
-      exec().feed(feeder1)
+      exec().feed(feeder1).feed(feeder2).feed(feeder3)
         .feed(custIdFeeder)
         .feed(libIdFeeder)
-        .exec(http("single-term-search")
+        .exec(http("three-term-search")
           .post(searchPath)
           .headers(headers)
-          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermEsQuery.json")))
+          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/ThreeTermsEsQuery.json")))
     }
   setUp(scn.inject(atOnceUsers(virtualUsers))).protocols(httpProtocol)
 }

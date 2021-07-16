@@ -1,4 +1,4 @@
-package com.imanage.stratus.elasticsearch.performance.query;
+package com.imanage.stratus.elasticsearch.performance.query
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 
 /*
 * Test scenario :
-* Single term ES query, 40 users, 25 queries each
+* Wildcard Single term ES query, 1 users, 10 queries each
 * */
-class SingleTerm_40_25 extends Simulation {
+class WildCardLeadingSingleTerm_1_10 extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
   val esBaseUrl = System.getProperty("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
   val esUser = System.getProperty("ES_USER", "healthcheck")
@@ -18,8 +18,8 @@ class SingleTerm_40_25 extends Simulation {
   val searchPath = "/dm." + podName + ".av.r/_search"
   val custId = System.getProperty("CUSTID", "516")
   val libId = System.getProperty("LIBID", "888")
-  val virtualUsers = 40
-  val scenarioRepeatCount = 25
+  val virtualUsers = 1
+  val scenarioRepeatCount = 10
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl(esBaseUrl)
     .basicAuth(esUser, esSecret)
@@ -46,10 +46,10 @@ class SingleTerm_40_25 extends Simulation {
       exec().feed(feeder1)
         .feed(custIdFeeder)
         .feed(libIdFeeder)
-        .exec(http("single-term-search")
+        .exec(http("single-term-leading-wildcard-search")
           .post(searchPath)
           .headers(headers)
-          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermEsQuery.json")))
+          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermLeadingWildCardEsQuery.json")))
     }
   setUp(scn.inject(atOnceUsers(virtualUsers))).protocols(httpProtocol)
 }

@@ -1,4 +1,4 @@
-package com.imanage.stratus.elasticsearch.performance.query;
+package com.imanage.stratus.elasticsearch.performance.query
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 
 /*
 * Test scenario :
-* Single term ES query, 40 users, 25 queries each
+* Single term ES query, 40 users, 2500 queries each
 * */
-class SingleTerm_40_25 extends Simulation {
+class SingleTerm_40_2500 extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
   val esBaseUrl = System.getProperty("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
   val esUser = System.getProperty("ES_USER", "healthcheck")
@@ -19,7 +19,7 @@ class SingleTerm_40_25 extends Simulation {
   val custId = System.getProperty("CUSTID", "516")
   val libId = System.getProperty("LIBID", "888")
   val virtualUsers = 40
-  val scenarioRepeatCount = 25
+  val scenarioRepeatCount = 2500
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl(esBaseUrl)
     .basicAuth(esUser, esSecret)
