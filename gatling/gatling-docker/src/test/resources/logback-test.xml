@@ -10,9 +10,9 @@
 
     <!-- uncomment and set to DEBUG to log all failing HTTP requests -->
     <!-- uncomment and set to TRACE to log all HTTP requests -->
-    <logger name="io.gatling.http.engine.response" level="${LOG_LEVEL:-DEBUG}"/>
+    <logger name="io.gatling.http.engine.response" level="${LOG_LEVEL:-TRACE}"/>
 
-    <root level="${ROOT_LOG_LEVEL:-WARN}">
+    <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="CONSOLE"/>
     </root>
 

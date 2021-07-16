@@ -1,0 +1,215 @@
+{
+  "sort": [],
+  "query": {
+    "nested": {
+      "path": "v",
+      "score_mode": "max",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "bool": {
+                "must": [
+                  {
+                    "bool": {
+                      "must": [
+                        {
+                          "bool": {
+                            "must": [
+                              {
+                                "bool": {
+                                  "should": [
+                                    {
+                                      "match": {
+                                        "v.anywherePM": "${term1}*"
+                                      }
+                                    },
+                                    {
+                                      "match": {
+                                        "v.content": {
+                                          "query": "${term1}*",
+                                          "analyzer": "multilingual_v3_english",
+                                          "operator": "and"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "filter": [
+                        {
+                          "bool": {
+                            "filter": [
+                              {
+                                "bool": {
+                                  "filter": [
+                                    {
+                                      "query_string": {
+                                        "query": "\"D\" OR \"5\"",
+                                        "default_field": "v.docType"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "bool": {
+                                  "must_not": [
+                                    {
+                                      "match_phrase": {
+                                        "v.typeAlias": "MIME"
+                                      }
+                                    },
+                                    {
+                                      "match_phrase": {
+                                        "v.typeAlias": "GW"
+                                      }
+                                    },
+                                    {
+                                      "match_phrase": {
+                                        "v.typeAlias": "NOTES"
+                                      }
+                                    },
+                                    {
+                                      "match_phrase": {
+                                        "v.typeAlias": "EML"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "bool": {
+                                  "filter": [
+                                    {
+                                      "bool": {
+                                        "should": [
+                                          {
+                                            "match": {
+                                              "v.anywherePM": "${term1}*"
+                                            }
+                                          },
+                                          {
+                                            "match": {
+                                              "v.content": {
+                                                "query": "${term1}*",
+                                                "analyzer": "multilingual_v3_english",
+                                                "operator": "and"
+                                              }
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "filter": [
+                  {
+                    "query_string": {
+                      "query": "((v.policyEnforced : false) OR ((v.policyDefaultAccessType : true))) AND ((v.operator:\"AADENMARTIN\" OR v.author:\"AADENMARTIN\") OR ((v.a:170709885334391411 OR v.a:98611610328411089 OR v.a:98611610328411090 OR v.a:98611610328411093 OR v.a:98611610328411092 OR v.a:98611610328411091) AND NOT v.d:170709885334391411 AND NOT v.d:98611610328411089 AND NOT v.d:98611610328411090 AND NOT v.d:98611610328411093 AND NOT v.d:98611610328411092 AND NOT v.d:98611610328411091) OR (( NOT v.a:170709885334391411 AND NOT v.a:98611610328411089 AND NOT v.a:98611610328411090 AND NOT v.a:98611610328411093 AND NOT v.a:98611610328411092 AND NOT v.a:98611610328411091 AND NOT v.d:170709885334391411 AND NOT v.d:98611610328411089 AND NOT v.d:98611610328411090 AND NOT v.d:98611610328411093 AND NOT v.d:98611610328411092 AND NOT v.d:98611610328411091) AND (v.defaultSecurity:\"P\" OR v.defaultSecurity:\"V\")))"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "filter": [
+            {
+              "bool": {
+                "filter": [
+                  {
+                    "term": {
+                      "v.customerId": "${custId}"
+                    }
+                  },
+                  {
+                    "term": {
+                      "v.libraryId": "${libId}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "inner_hits": {
+        "size": 1,
+        "sort": [
+          {
+            "v.docVersion": {
+              "order": "desc"
+            }
+          }
+        ],
+        "_source": {
+          "includes": [
+            "v.docAlias",
+            "v.docNum",
+            "v.docVersion",
+            "v.aClass",
+            "v.subclass",
+            "v.c1Date",
+            "v.c2Date",
+            "v.conversationId",
+            "v.conversationName",
+            "v.hasAttachment",
+            "v.messageFrom",
+            "v.messageFrom_original",
+            "v.messageTo",
+            "v.messageTo_original",
+            "v.messageCc",
+            "v.messageCc_original",
+            "v.messageBcc",
+            "v.messageBcc_original",
+            "v.messageReceivedDate",
+            "v.messageSentDate",
+            "v.attachedFileNames",
+            "v.attachedFileSizes",
+            "v.attachedFileUniqueNames"
+          ]
+        }
+      }
+    }
+  },
+  "_source": {
+    "includes": [
+      "v.docAlias",
+      "v.docNum",
+      "v.docVersion",
+      "v.aClass",
+      "v.subclass",
+      "v.c1Date",
+      "v.c2Date",
+      "v.conversationId",
+      "v.conversationName",
+      "v.hasAttachment",
+      "v.messageFrom",
+      "v.messageFrom_original",
+      "v.messageTo",
+      "v.messageTo_original",
+      "v.messageCc",
+      "v.messageCc_original",
+      "v.messageBcc",
+      "v.messageBcc_original",
+      "v.messageReceivedDate",
+      "v.messageSentDate",
+      "v.attachedFileNames",
+      "v.attachedFileSizes",
+      "v.attachedFileUniqueNames"
+    ]
+  },
+  "version": true
+}
