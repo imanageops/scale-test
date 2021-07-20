@@ -17,7 +17,7 @@ RUN apt-get update && \
     unzip -u /gatling-charts-highcharts-bundle-${GATLING_VERSION}-bundle.zip && \
     rm -rf /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/simulations/* \
            /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/resources/* && \
-    rm /gatling-charts-highcharts-bundle-3.6.1/conf/logback.xml && \
+    rm /gatling-charts-highcharts-bundle-${GATLING_VERSION}/conf/logback.xml && \
     mkdir -p /vault-scripts && tar -C /vault-scripts -xzvf /tmp/vault-scripts-1.1.25.tar.gz
 
 ADD src/test/scala /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/simulations
