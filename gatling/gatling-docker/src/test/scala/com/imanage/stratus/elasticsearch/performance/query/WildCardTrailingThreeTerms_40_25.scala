@@ -40,7 +40,7 @@ class WildCardTrailingThreeTerms_40_25 extends Simulation {
   logger.info("ES user: " + esUser)
   logger.info("ES pod name: " + podName)
   logger.info("Cust id: " + custId)
-  logger.info("ES Lib Id: " + libId)
+  logger.info("Lib Id: " + libId)
   logger.info("Virtual users: " + virtualUsers)
   logger.info("Test scenario per user : " + scenarioRepeatCount)
   val scn = scenario("ElasticQueryDirect")
