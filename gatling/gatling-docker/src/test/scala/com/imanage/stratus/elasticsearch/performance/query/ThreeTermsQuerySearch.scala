@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 
 /*
 * Test scenario :
-* Single term ES query, 40 users, 25 queries each
+* Three terms ES query, 40 users, 25 queries each
 * */
-class SingleTermQuerySearch extends Simulation {
+class ThreeTermsQuerySearch extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
   val esBaseUrl = System.getenv().getOrDefault("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
   val esUser = System.getenv().getOrDefault("ES_USER", "healthcheck")
@@ -20,7 +20,6 @@ class SingleTermQuerySearch extends Simulation {
   val libId = System.getenv().getOrDefault("LIBRARY_ID", "888")
   val virtualUsers = Integer.parseInt(System.getenv().getOrDefault("VIRTUAL_USERS", "1"))
   val scenarioRepeatCount = Integer.parseInt(System.getenv().getOrDefault("SCENARIO_REPEAT_COUNT", "1"))
-  val termDataFile = System.getenv().getOrDefault("DATA_FILE", "dict1.csv")
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl(esBaseUrl)
     .basicAuth(esUser, esSecret)
@@ -34,7 +33,9 @@ class SingleTermQuerySearch extends Simulation {
     "TE" -> "Trailers")
   val custIdFeeder = Array(Map("custId" -> custId)).circular
   val libIdFeeder = Array(Map("libId" -> libId)).circular
-  val feeder1 = csv("com/imanage/stratus/elasticsearch/feeder/"+termDataFile).random
+  val feeder1 = csv("com/imanage/stratus/elasticsearch/feeder/dict1.csv").random
+  val feeder2 = csv("com/imanage/stratus/elasticsearch/feeder/dict2.csv").random
+  val feeder3 = csv("com/imanage/stratus/elasticsearch/feeder/dict3.csv").random
   logger.info("ES Base URL: " + esBaseUrl)
   logger.info("ES user: " + esUser)
   logger.info("ES pod name: " + podName)
@@ -42,16 +43,15 @@ class SingleTermQuerySearch extends Simulation {
   logger.info("Lib Id: " + libId)
   logger.info("Virtual users: " + virtualUsers)
   logger.info("Test scenario per user : " + scenarioRepeatCount)
-  logger.info("Test data file : " + termDataFile)
   val scn = scenario("ElasticQueryDirect")
     .repeat(scenarioRepeatCount) {
-      exec().feed(feeder1)
+      exec().feed(feeder1).feed(feeder2).feed(feeder3)
         .feed(custIdFeeder)
         .feed(libIdFeeder)
-        .exec(http("single-term-search")
+        .exec(http("three-term-search")
           .post(searchPath)
           .headers(headers)
-          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermEsQuery.json")))
+          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/ThreeTermsEsQuery.json")))
     }
   setUp(scn.inject(atOnceUsers(virtualUsers))).protocols(httpProtocol)
 }
