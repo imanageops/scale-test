@@ -34,4 +34,4 @@ echo "JAVA_OPTS=${JAVA_OPTS}"
 
 echo "Starting ${GATLING_SCENARIO} scenario at $(date)"
 
-/gatling-charts-highcharts-bundle-3.6.0/bin/gatling.sh -s ${GATLING_SCENARIO}
+/gatling-charts-highcharts-bundle-${GATLING_VERSION}/bin/gatling.sh -s ${GATLING_SCENARIO}

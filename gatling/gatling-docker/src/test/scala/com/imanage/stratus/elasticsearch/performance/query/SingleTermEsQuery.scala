@@ -7,19 +7,20 @@ import org.slf4j.LoggerFactory
 
 /*
 * Test scenario :
-* Wildcard Single term ES query, 40 users, 25 queries each
+* Single term ES query, 40 users, 25 queries each
 * */
-class WildCardTrailingSingleTerm5Letters_40_25 extends Simulation {
+class SingleTermEsQuery extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
-  val esBaseUrl = System.getProperty("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
-  val esUser = System.getProperty("ES_USER", "healthcheck")
-  val esSecret = System.getProperty("ES_SECRET", "healthchek")
-  val podName = System.getProperty("POD_NAME", "dev3pod2")
+  val esBaseUrl = System.getenv().getOrDefault("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
+  val esUser = System.getenv().getOrDefault("ES_USER", "healthcheck")
+  val esSecret = System.getenv().getOrDefault("ES_SECRET", "healthcheck")
+  val podName = System.getenv().getOrDefault("POD_NAME", "dev3pod2")
   val searchPath = "/dm." + podName + ".av.r/_search"
-  val custId = System.getProperty("CUSTID", "516")
-  val libId = System.getProperty("LIBID", "888")
-  val virtualUsers = 40
-  val scenarioRepeatCount = 25
+  val custId = System.getenv().getOrDefault("CUSTOMER_ID", "516")
+  val libId = System.getenv().getOrDefault("LIBRARY_ID", "888")
+  val virtualUsers = Integer.parseInt(System.getenv().getOrDefault("VIRTUAL_USERS", "1"))
+  val scenarioRepeatCount = Integer.parseInt(System.getenv().getOrDefault("SCENARIO_REPEAT_COUNT", "1"))
+  val termDataFile = System.getenv().getOrDefault("DATA_FILE", "dict1.csv")
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl(esBaseUrl)
     .basicAuth(esUser, esSecret)
@@ -33,23 +34,29 @@ class WildCardTrailingSingleTerm5Letters_40_25 extends Simulation {
     "TE" -> "Trailers")
   val custIdFeeder = Array(Map("custId" -> custId)).circular
   val libIdFeeder = Array(Map("libId" -> libId)).circular
-  val feeder1 = csv("com/imanage/stratus/elasticsearch/feeder/letter5.csv").random
+  val feeder1 = csv("com/imanage/stratus/elasticsearch/feeder/"+termDataFile).random
   logger.info("ES Base URL: " + esBaseUrl)
   logger.info("ES user: " + esUser)
   logger.info("ES pod name: " + podName)
   logger.info("Cust id: " + custId)
-  logger.info("ES Lib Id: " + libId)
+  logger.info("Lib Id: " + libId)
   logger.info("Virtual users: " + virtualUsers)
   logger.info("Test scenario per user : " + scenarioRepeatCount)
-  val scn = scenario("ElasticQueryDirect")
+  logger.info("Test data file : " + termDataFile)
+  val scn = scenario("SingleTermQuerySearch")
     .repeat(scenarioRepeatCount) {
       exec().feed(feeder1)
         .feed(custIdFeeder)
         .feed(libIdFeeder)
-        .exec(http("single-term-trailing-wildcard-search")
+        .exec(http("single-term-search")
           .post(searchPath)
           .headers(headers)
-          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermTrailingWildCardEsQuery.json")))
+          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermEsQuery.json"))
+          .check( jsonPath( "$.hits.total.value" ).saveAs( "hits" ) )
+        ).exec( session => {
+          logger.info( "Docs found : " + session("hits").as[String] )
+          session
+        })
     }
   setUp(scn.inject(atOnceUsers(virtualUsers))).protocols(httpProtocol)
 }
