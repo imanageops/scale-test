@@ -136,7 +136,7 @@
                   },
                   {
                     "term": {
-                      "v.libraryId": "888"
+                      "v.libraryId": "${libId}"
                     }
                   }
                 ]

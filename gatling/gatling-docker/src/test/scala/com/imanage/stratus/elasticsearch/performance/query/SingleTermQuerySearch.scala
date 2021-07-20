@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory
 class SingleTermQuerySearch extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
   val esBaseUrl = System.getenv().getOrDefault("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
-  val esUser = System.getenv().getOrDefault("ES_USER", "healthcheck")
-  val esSecret = System.getenv().getOrDefault("ES_SECRET", "healthchek")
+  val esUser = System.getenv().getOrDefault("ES_USER", "elastic")
+  val esSecret = System.getenv().getOrDefault("ES_SECRET", "haZnnKcNtp8afnjM6l5LtFlgT4IfhuiNMraPRBKb")
   val podName = System.getenv().getOrDefault("POD_NAME", "dev3pod2")
   val searchPath = "/dm." + podName + ".av.r/_search"
   val custId = System.getenv().getOrDefault("CUSTOMER_ID", "516")
