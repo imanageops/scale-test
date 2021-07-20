@@ -1,0 +1,101 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-test-elasticsearch
+  namespace: cloudimanage
+  labels:
+    app.kubernetes.io/name: gatling-load-test-elasticsearch
+    app.kubernetes.io/instance: atldev4-gatling-load-elasticsearch
+    app.kubernetes.io/version: "0.1.0"
+spec:
+  template:
+    metadata:
+      labels:
+        component: load-test
+        app.kubernetes.io/name: gatling-load-test
+        app.kubernetes.io/instance: atldev4-gatling-load-elasticsearch
+        app.kubernetes.io/version: "0.1.0"
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-inject-token: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/role: cloudimanage
+        vault.hashicorp.com/ca-cert: /vault/tls/vault.ca
+        vault.hashicorp.com/tls-secret: vault-server-tls
+        vault.hashicorp.com/agent-inject-file-s0: secret/atldev4pod1-elasticsearch/api_credentials
+        vault.hashicorp.com/agent-inject-secret-s0: secret/atldev4pod1-elasticsearch/api_credentials
+        vault.hashicorp.com/agent-inject-template-s0: |
+          {{- with secret "secret/atldev4pod1-elasticsearch/api_credentials" -}}
+          {{ .Data | toJSON }}
+          {{- end }}
+    spec:
+      containers:
+        - name: atldev4-gatling-load-test
+          securityContext:
+            runAsUser: 0
+            privileged: true
+          image: docker.sretools.io/unverified/ssaxena/gatling-docker:1.0.11
+          command:
+            - sh
+            - -c
+            - |
+              #!/usr/bin/env bash -e
+              /gatling-charts-highcharts-bundle-3.6.1/scripts/run-es-test.sh
+              sleep 36000
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1Gi
+            requests:
+              cpu: 2000m
+              memory: 1Gi
+          env:
+            - name: MEM_LIMIT_BYTES
+              valueFrom:
+                resourceFieldRef:
+                  containerName: atldev4-gatling-load-test
+                  resource: limits.memory
+            - name: "GATLING_SCENARIO"
+              value: "com.imanage.stratus.elasticsearch.performance.query.SingleTerm_40_25"
+            - name: "LIBRARY_ID"
+              value: "1253"
+            - name: "CUSTOMER_ID"
+              value: "516"
+            - name: "ES_BASE_URL"
+              value: "https://es7-atldev4pod1-elasticsearch.service.imanagecloud.com:9950"
+            - name: "POD_NAME"
+              value: "atldev4pod1"
+          volumeMounts:
+            - mountPath: /vault-scripts/imanage-ca.crt
+              name: ca-cert
+              readOnly: true
+              subPath: imanage-ca.crt
+            - mountPath: /vault-scripts/set-perm-token
+              name: set-perm-token
+              readOnly: true
+              subPath: set-perm-token
+            - mountPath: /vault-scripts/get-vault-secret
+              name: get-vault-secret
+              readOnly: true
+              subPath: get-vault-secret
+      volumes:
+        - name: ca-cert
+          secret:
+            items:
+              - key: tls.crt
+                path: imanage-ca.crt
+            secretName: ca-tls
+        - configMap:
+            defaultMode: 493
+            name: set-perm-token
+          name: set-perm-token
+        - configMap:
+            defaultMode: 493
+            name: get-vault-secret
+          name: get-vault-secret
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: regcred
+      securityContext: {}
+      serviceAccountName: cloudimanage

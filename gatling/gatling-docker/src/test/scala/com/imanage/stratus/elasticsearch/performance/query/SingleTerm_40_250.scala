@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory
 * */
 class SingleTerm_40_250 extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
-  val esBaseUrl = System.getProperty("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
-  val esUser = System.getProperty("ES_USER", "healthcheck")
-  val esSecret = System.getProperty("ES_SECRET", "healthchek")
-  val podName = System.getProperty("POD_NAME", "dev3pod2")
+  val esBaseUrl = System.getenv().getOrDefault("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
+  val esUser = System.getenv().getOrDefault("ES_USER", "healthcheck")
+  val esSecret = System.getenv().getOrDefault("ES_SECRET", "healthchek")
+  val podName = System.getenv().getOrDefault("POD_NAME", "dev3pod2")
   val searchPath = "/dm." + podName + ".av.r/_search"
-  val custId = System.getProperty("CUSTID", "516")
-  val libId = System.getProperty("LIBID", "888")
+  val custId = System.getenv().getOrDefault("CUSTOMER_ID", "516")
+  val libId = System.getenv().getOrDefault("LIBRARY_ID", "888")
   val virtualUsers = 40
   val scenarioRepeatCount = 250
   val httpProtocol: HttpProtocolBuilder = http

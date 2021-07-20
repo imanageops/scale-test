@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 
 /*
 * Test scenario :
-* Wildcard Single term ES query, 10 users, 25 queries each
+* Single term ES query, 40 users, 25 queries each
 * */
-class WildCardLeadingSingleTerm_10_25 extends Simulation {
+class SingleTerm_1_1000 extends Simulation {
   private val logger = LoggerFactory.getLogger(getClass)
   val esBaseUrl = System.getenv().getOrDefault("ES_BASE_URL", "https://internal-atldev3.imanagelabs.com:9953")
   val esUser = System.getenv().getOrDefault("ES_USER", "healthcheck")
@@ -18,8 +18,8 @@ class WildCardLeadingSingleTerm_10_25 extends Simulation {
   val searchPath = "/dm." + podName + ".av.r/_search"
   val custId = System.getenv().getOrDefault("CUSTOMER_ID", "516")
   val libId = System.getenv().getOrDefault("LIBRARY_ID", "888")
-  val virtualUsers = 10
-  val scenarioRepeatCount = 25
+  val virtualUsers = 1
+  val scenarioRepeatCount = 1000
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl(esBaseUrl)
     .basicAuth(esUser, esSecret)
@@ -46,10 +46,10 @@ class WildCardLeadingSingleTerm_10_25 extends Simulation {
       exec().feed(feeder1)
         .feed(custIdFeeder)
         .feed(libIdFeeder)
-        .exec(http("single-term-leading-wildcard-search")
+        .exec(http("single-term-search")
           .post(searchPath)
           .headers(headers)
-          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermLeadingWildCardEsQuery.json")))
+          .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermEsQuery.json")))
     }
   setUp(scn.inject(atOnceUsers(virtualUsers))).protocols(httpProtocol)
 }
