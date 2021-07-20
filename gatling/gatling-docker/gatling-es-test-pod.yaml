@@ -35,7 +35,7 @@ spec:
           securityContext:
             runAsUser: 0
             privileged: true
-          image: docker.sretools.io/unverified/ssaxena/gatling-docker:1.0.31
+          image: docker.sretools.io/unverified/ssaxena/gatling-docker:1.0.37
           command:
             - sh
             - -c
@@ -57,7 +57,7 @@ spec:
                   containerName: atldev4-gatling-load-test
                   resource: limits.memory
             - name: "GATLING_SCENARIO"
-              value: "com.imanage.stratus.elasticsearch.performance.query.SingleTerm_40_25"
+              value: "com.imanage.stratus.elasticsearch.performance.query.SingleTermEsQuery"
             - name: "LIBRARY_ID"
               value: "1253"
             - name: "CUSTOMER_ID"
