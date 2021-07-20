@@ -13,4 +13,4 @@ or simply:
 
     $mvn gatling:test
 
-You can download a copy of Gatling Charts Highcharts Bundle [here](https://mvnrepository.com/artifact/io.gatling.highcharts/gatling-charts-highcharts-bundle/3.6.0)
+You can download a copy of Gatling Charts Highcharts Bundle [here](https://mvnrepository.com/artifact/io.gatling.highcharts/gatling-charts-highcharts-bundle/3.6.1)

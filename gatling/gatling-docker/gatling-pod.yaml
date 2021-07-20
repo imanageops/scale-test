@@ -53,7 +53,7 @@ spec:
             - -c
             - |
               #!/usr/bin/env bash -e
-              /gatling-charts-highcharts-bundle-3.6.0/scripts/entrypoint.sh
+              /gatling-charts-highcharts-bundle-3.6.1/scripts/entrypoint.sh
               sleep 36000
           resources:
             limits:
