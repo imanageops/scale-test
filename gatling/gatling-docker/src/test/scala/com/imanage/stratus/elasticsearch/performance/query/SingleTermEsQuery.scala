@@ -54,7 +54,7 @@ class SingleTermEsQuery extends Simulation {
           .body(ElFileBody("com/imanage/stratus/elasticsearch/query/SingleTermEsQuery.json"))
           .check( jsonPath( "$.hits.total.value" ).saveAs( "hits" ) )
         ).exec( session => {
-          logger.info( "Docs found : " + session("hits").as[String] )
+          logger.debug( "Docs found : " + session("hits").as[String] )
           session
         })
     }
