@@ -27,31 +27,44 @@ if [[ -z ${ES_BASE_URL} ]]; then
   exit 1
 fi
 
-# elasticsearch api_credentials Credentials
-account_json=$(/vault-scripts/get-vault-secret "atldev4pod1-elasticsearch/api_credentials") || exit 1
+if [[ -z ${ES_USER} ]]; then
+  echo -e "ES_USER is nor defined. System will try to read ES credentials from Vault."
+  # elasticsearch api_credentials Credentials
+  account_json=$(/vault-scripts/get-vault-secret "atldev4pod1-elasticsearch/api_credentials") || exit 1
 
-es_account=$(echo "${account_json}" | jq -e -r '.username') || {
-  echo "ERROR: Failed to extract atldev4pod1-elasticsearch/api_credentials"
-  exit 1
-}
+  es_account=$(echo "${account_json}" | jq -e -r '.username') || {
+    echo "ERROR: Failed to extract atldev4pod1-elasticsearch/api_credentials"
+    exit 1
+  }
 
-es_account_key=$(echo "${account_json}" | jq -e -r '.password') || {
-  echo "ERROR: Failed to extract atldev4pod1-elasticsearch/api_credentials"
-  exit 1
-}
+  es_account_key=$(echo "${account_json}" | jq -e -r '.password') || {
+    echo "ERROR: Failed to extract atldev4pod1-elasticsearch/api_credentials"
+    exit 1
+  }
 
-if [ -z "${es_account}" ]; then
-  echo "ERROR: es_account cannot be empty"
+  if [ -z "${es_account}" ]; then
+    echo "ERROR: es_account cannot be empty"
+    exit 1
+  fi
+
+  if [ -z "${es_account_key}" ]; then
+    echo "ERROR: es_account_key cannot be empty"
+    exit 1
+  fi
+
+  export ES_USER="${es_account}";
+  export ES_SECRET="${es_account_key}";
+fi
+
+if [[ -z ${ES_USER} ]]; then
+  echo -e "Please provide a ES_USER."
   exit 1
 fi
 
-if [ -z "${es_account_key}" ]; then
-  echo "ERROR: es_account_key cannot be empty"
+if [[ -z ${ES_SECRET} ]]; then
+  echo -e "Please provde a ES_SECRET."
   exit 1
 fi
-
-export ES_USER="${es_account}";
-export ES_SECRET="${es_account_key}";
 
 echo "JAVA_OPTS=${JAVA_OPTS}"
 
