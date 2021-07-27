@@ -35,3 +35,9 @@ ES test on Dev VM docker container:
 
 
 Navigate to /gatling-charts-highcharts-bundle-3.6.1/scripts and run-es-test.sh file.
+
+To debug the test cases edit logback-test.xml file:
+* To log ES query request and response
+> <logger name="io.gatling.http.engine.response" level="TRACE"/>
+* To log no. of hits only
+> <logger name="com.imanage.stratus" level="DEBUG"/>
