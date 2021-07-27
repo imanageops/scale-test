@@ -48,13 +48,13 @@ class WildCardTrailingThreeTermsEsQuery extends Simulation {
       exec().feed(feeder1).feed(feeder2).feed(feeder3)
         .feed(custIdFeeder)
         .feed(libIdFeeder)
-        .exec(http("single-term-trailing-wildcard-search")
+        .exec(http("three-term-trailing-wildcard-search")
           .post(searchPath)
           .headers(headers)
           .body(ElFileBody("com/imanage/stratus/elasticsearch/query/ThreeTermsTrailingWildCardEsQuery.json"))
           .check( jsonPath( "$.hits.total.value" ).saveAs( "hits" ) )
         ).exec( session => {
-        logger.info( "Docs found : " + session("hits").as[String] )
+        logger.debug( "Docs found : " + session("hits").as[String] )
         session
       })
     }
