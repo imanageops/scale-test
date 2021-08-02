@@ -10,14 +10,16 @@ To run gatling docker as singularity job:
 
 To run tests once exec in to the docker container:
 
-export LIBRARY_ID=888
-export CUSTOMER_ID=516
-export ES_BASE_URL="https://internal-atldev3.imanagelabs.com:9953"
-export POD_NAME=dev3pod2
-export ES_USER=workapi
-export ES_SECRET=<es password>
-export SCENARIO_REPEAT_COUNT=2
-export VIRTUAL_USERS=1
-export GATLING_SCENARIO=com.imanage.stratus.elasticsearch.performance.query.SingleTermEsQuery
-export DATA_FILE=words-mixedlen.csv (optional)
+* export LIBRARY_ID=888
+* export CUSTOMER_ID=516
+* export ES_BASE_URL="https://es7-dev3pod2-elasticsearch.service.imanagecloud.com:9950"
+* export POD_NAME=dev3pod2
+* export ES_USER=workapi
+* export ES_SECRET=`<es password>`
+* export SCENARIO_REPEAT_COUNT=2
+* export VIRTUAL_USERS=1
+* export GATLING_SCENARIO=com.imanage.stratus.elasticsearch.performance.query.SingleTermEsQuery
+* export DATA_FILE=words-mixedlen.csv (optional)
+* export SIMULATION_DURATION=10 (optional)
+
 Navigate to /gatling-charts-highcharts-bundle-3.6.1/scripts and run-es-test.sh file.

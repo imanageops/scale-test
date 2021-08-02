@@ -5,6 +5,9 @@ import io.gatling.http.Predef._
 import io.gatling.http.protocol.HttpProtocolBuilder
 import org.slf4j.LoggerFactory
 
+import java.util.concurrent.TimeUnit
+import scala.concurrent.duration.FiniteDuration
+
 /*
 * Test scenario :
 * Three terms ES query, 40 users, 25 queries each
@@ -20,6 +23,7 @@ class ThreeTermsEsQuery extends Simulation {
   val libId = System.getenv().getOrDefault("LIBRARY_ID", "888")
   val virtualUsers = Integer.parseInt(System.getenv().getOrDefault("VIRTUAL_USERS", "1"))
   val scenarioRepeatCount = Integer.parseInt(System.getenv().getOrDefault("SCENARIO_REPEAT_COUNT", "1"))
+  val durationMinutes = Integer.parseInt(System.getenv().getOrDefault("SIMULATION_DURATION", "0"))
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl(esBaseUrl)
     .basicAuth(esUser, esSecret)
@@ -58,5 +62,10 @@ class ThreeTermsEsQuery extends Simulation {
         session
       })
     }
-  setUp(scn.inject(atOnceUsers(virtualUsers))).protocols(httpProtocol)
+  if(durationMinutes != 0) {
+    logger.info("Going to run simulation for " + durationMinutes + " minutes. ")
+    setUp(scn.inject(constantConcurrentUsers(virtualUsers).during(FiniteDuration.apply(durationMinutes,TimeUnit.MINUTES)))).protocols(httpProtocol)
+  } else {
+    setUp(scn.inject(atOnceUsers(virtualUsers))).protocols(httpProtocol)
+  }
 }
