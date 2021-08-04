@@ -19,8 +19,6 @@ RUN apt-get update && \
            /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/resources/* && \
     rm /gatling-charts-highcharts-bundle-${GATLING_VERSION}/conf/logback.xml && \
     mkdir -p /vault-scripts && tar -C /vault-scripts -xzvf /tmp/vault-scripts-1.1.25.tar.gz && \
-    rm /gatling-charts-highcharts-bundle-${GATLING_VERSION}/lib/akka-actor_2.13-2.6.14.jar && \
-    rm /gatling-charts-highcharts-bundle-${GATLING_VERSION}/lib/akka-slf4j_2.13-2.6.14.jar && \
     chmod 755 /gatling-charts-highcharts-bundle-${GATLING_VERSION}/scripts/*.sh
 
 ADD src/test/scala /gatling-charts-highcharts-bundle-${GATLING_VERSION}/user-files/simulations
