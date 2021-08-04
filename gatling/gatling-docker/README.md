@@ -32,6 +32,7 @@ ES test on Dev VM docker container:
 * export VIRTUAL_USERS=1
 * export GATLING_SCENARIO=com.imanage.stratus.elasticsearch.performance.query.SingleTermEsQuery
 * export DATA_FILE=words-mixedlen.csv (optional)
+* export SIMULATION_DURATION=10 (optional)
 
 
 Navigate to /gatling-charts-highcharts-bundle-3.6.1/scripts and run-es-test.sh file.

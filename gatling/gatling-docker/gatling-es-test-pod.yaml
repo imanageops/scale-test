@@ -35,21 +35,21 @@ spec:
           securityContext:
             runAsUser: 0
             privileged: true
-          image: docker.sretools.io/unverified/ssaxena/gatling-docker:1.0.67
+          image: docker.sretools.io/unverified/ssaxena/gatling-docker:2.0.7
           command:
             - sh
             - -c
             - |
               #!/usr/bin/env bash -e
               /gatling-charts-highcharts-bundle-3.6.1/scripts/run-es-test.sh
-              sleep 36000
+              sleep 43200
           resources:
             limits:
-              cpu: 2000m
-              memory: 1Gi
+              cpu: 4000m
+              memory: 2Gi
             requests:
-              cpu: 2000m
-              memory: 1Gi
+              cpu: 4000m
+              memory: 2Gi
           env:
             - name: MEM_LIMIT_BYTES
               valueFrom:
