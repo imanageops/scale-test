@@ -16,9 +16,13 @@ class DocumentUploadSimulation extends Simulation {
 
   //  val baseUri = "https://frontend.service.imanagecloud.com"
   private val apiBaseUri = System.getProperty("apiBaseUri", "https://atldev1.imanagelabs.com")
-  private val elasticsearchBasePath = System.getProperty("elasticsearchBasePath", "https://es7-atldev4pod2-elasticsearch.service.imanagecloud.com:9950/dm.atldev4pod2.av.046")
+  private val libraryName = System.getProperty("libraryName", "ATLDEV4POD1")
+  private val folderNumber = System.getProperty("folderNumber", "5")
+  private val elasticsearchPodName = System.getProperty("elasticsearchPodName", "atldev4pod1")
+  private val elasticsearchIndexName = System.getProperty("elasticsearchIndexName", "dm.atldev4pod1.av.046")
+  private val elasticsearchBasePath = System.getProperty("elasticsearchBasePath", "https://es7-" + elasticsearchPodName + "-elasticsearch.service.imanagecloud.com:9950/" + elasticsearchIndexName)
   private val elasticsearchUsername = System.getProperty("elasticsearchUsername", "elastic")
-  private val elasticsearchPassword = System.getProperty("elasticsearchPassword", "oLgVTL4VfeZKCIXi5Ag3aLVfEFGRx5vt")
+  private val elasticsearchPassword = System.getProperty("elasticsearchPassword", "kcAcQHMlwAlobmKYfKtRKkyiOe9K7J3b")
   private val sleepTimeUntilElasticsearchQuery = Integer.getInteger("sleepTimeUntilElasticsearchQuery", 30)
 
   val xAuthToken: String = log_in(apiBaseUri)
@@ -53,7 +57,7 @@ class DocumentUploadSimulation extends Simulation {
 
   val documentUpload = scenario("Upload document and query Elasticsearch")
     .exec(http("Upload document")
-      .post("/work/web/api/v2/customers/516/libraries/ATLDEV4POD2/folders/ATLDEV4POD2!5/documents")
+      .post("/work/web/api/v2/customers/516/libraries/" + libraryName + "/folders/" + libraryName + "!" + folderNumber + "/documents")
       .headers(headers)
       .bodyParts(profileBodyPart, fileBodyPart).asMultipartForm
       .check(status.is(201))

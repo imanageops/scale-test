@@ -47,7 +47,7 @@ spec:
           securityContext:
             runAsUser: 0
             privileged: true
-          image: docker.sretools.io/unverified/adrian/gatling:1.0.10
+          image: docker.sretools.io/unverified/adrian/gatling-load:1.0.16
           command:
             - sh
             - -c
@@ -69,9 +69,9 @@ spec:
                   containerName: atldev4-gatling-load-test
                   resource: limits.memory
             - name: "GATLING_SCENARIO"
-              value: "com.imanage.stratus.AccusoftPreviewSimulation"
+              value: "com.imanage.stratus.DocumentUploadSimulation"
             - name: "JAVA_OPTS"
-              value: "-DtestDurationSeconds=3600 -DconstantConcurrentUsers=10"
+              value: "-DtestDurationSeconds=3600 -DconstantConcurrentUsers=10 -DelasticsearchPassword=kcAcQHMlwAlobmKYfKtRKkyiOe9K7J3b"
             - name: "LIBRARY_ID"
               value: "1379"
             - name: "LIBRARY_NAME"

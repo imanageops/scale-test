@@ -22,7 +22,7 @@ fi
 
 if [[ ! "${JAVA_OPTS}" =~ .*"-DelasticsearchBasePath=".* ]]; then
   echo "Did not find -DelasticsearchBasePath in the configuration. Using default value."
-  export JAVA_OPTS="${JAVA_OPTS} -DelasticsearchBasePath=https://es7-atldev4pod2-elasticsearch.service.imanagecloud.com:9950/dm.atldev4pod2.av.046"
+  export JAVA_OPTS="${JAVA_OPTS} -DelasticsearchBasePath=https://es7-atldev4pod1-elasticsearch.service.imanagecloud.com:9950/dm.atldev4pod1.av.046"
 fi
 
 if [[ ! "${JAVA_OPTS}" =~ .*"-DsleepTimeUntilElasticsearchQuery=".* ]]; then

@@ -12,7 +12,7 @@ package:
 deploy:
 
 gatling-docker:
-	docker build -t gatling-docker --build-arg GATLING_VERSION=$(GATLING_VERSION) .
+	docker build -t gatling-load --build-arg GATLING_VERSION=$(GATLING_VERSION) .
 
 download:
 ifeq ($(wildcard ./target/gatling-charts-highcharts-bundle-$(GATLING_VERSION)-bundle.zip),)

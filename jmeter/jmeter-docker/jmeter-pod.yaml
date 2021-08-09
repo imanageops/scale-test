@@ -1,36 +1,44 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: atldev4-jmeter-test-pod
+  name: atldev4-jmeter-load-test
   namespace: cloudimanage
   labels:
-        app.kubernetes.io/instance: atldev4-jmeter-test-pod
-        app.kubernetes.io/name: atldev4-jmeter-test-pod
+        app.kubernetes.io/instance: atldev4-jmeter-load-test
+        app.kubernetes.io/name: atldev4-jmeter-load-test
 spec:
-  containers:
-    - env:
-        - name: CONTAINER_ID
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: JMETER_OPTS
-          value: >
-            -Dnumber_of_threads=30 -Dramp_up_time_seconds=60 -Dtest_duration_seconds=3600 -Dcustomer_id=516 -Dlibrary_name=ATLDEV4POD1 -Dfolder_number=9
-        - name: JMETER_TEST
-          value: supervised-import-with-delete
-        - name: ENVIRONMENT
-          value: atldev4
-      image: 'docker.sretools.io/unverified/adrian/jmeter-docker:1.0.14'
-      imagePullPolicy: Always
-      name: jmeter-docker
-      resources:
-        requests:
-          cpu: 1000m
-          memory: 1Gi
-        limits:
-          cpu: 2000m
-          memory: 2Gi
-  imagePullSecrets:
-    - name: regcred
-  securityContext: {}
-  serviceAccountName: cloudimanage
+  selector:
+    matchLabels:
+      app: atldev4-jmeter-load-test
+  template:
+    metadata:
+      labels:
+        app: atldev4-jmeter-load-test
+    spec:
+      containers:
+        - env:
+            - name: CONTAINER_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JMETER_OPTS
+              value: >
+                -Dnumber_of_threads=30 -Dramp_up_time_seconds=60 -Dtest_duration_seconds=3600 -Dcustomer_id=516 -Dlibrary_name=ATLDEV4POD1 -Dfolder_number=9
+            - name: JMETER_TEST
+              value: supervised-import-with-delete
+            - name: ENVIRONMENT
+              value: atldev4
+          image: 'docker.sretools.io/unverified/adrian/jmeter-docker:1.0.15'
+          imagePullPolicy: Always
+          name: jmeter-docker
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+      imagePullSecrets:
+        - name: regcred
+      securityContext: {}
+      serviceAccountName: cloudimanage

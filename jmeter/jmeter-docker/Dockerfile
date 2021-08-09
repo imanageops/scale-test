@@ -1,6 +1,6 @@
 FROM registry.imanage.com/m-java11-focal:latest
 
-ENV JMETER_TEST="supervised-import-with-delete" HEAP="-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m" JMETER_OPTS=""
+ENV JMETER_TEST="supervised-import-with-delete" HEAP="-XX:MaxRAMPercentage=75.0 -XX:MaxMetaspaceSize=256m" JMETER_OPTS=""
 
 ARG JMETER_VERSION=5.4.1
 ADD target/apache-jmeter-${JMETER_VERSION}.tgz /opt
