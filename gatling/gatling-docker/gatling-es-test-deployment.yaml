@@ -1,18 +1,23 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: load-test-elasticsearch
+  name: load-test-elasticsearch-deployment
   namespace: cloudimanage
   labels:
-    app.kubernetes.io/name: gatling-load-test-elasticsearch
-    app.kubernetes.io/instance: atldev4-gatling-load-elasticsearch
+    app.kubernetes.io/name: gatling-load-test-elasticsearch-deployment
+    app.kubernetes.io/instance: atldev4-gatling-load-elasticsearch-deployment
     app.kubernetes.io/version: "0.1.0"
 spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gatling-es-load-test-deployment
+      app.kubernetes.io/instance: atldev4-gatling-load-elasticsearch
+  replicas: 3 # tells deployment to run 2 pods matching the template
   template:
     metadata:
       labels:
-        component: load-test
-        app.kubernetes.io/name: gatling-load-test
+        component: es-load-test
+        app.kubernetes.io/name: gatling-es-load-test-deployment
         app.kubernetes.io/instance: atldev4-gatling-load-elasticsearch
         app.kubernetes.io/version: "0.1.0"
       annotations:
@@ -45,6 +50,7 @@ spec:
               sleep 43200
           resources:
             limits:
+              cpu: 4000m
               memory: 2Gi
             requests:
               cpu: 4000m
@@ -93,8 +99,8 @@ spec:
             defaultMode: 493
             name: get-vault-secret
           name: get-vault-secret
-      restartPolicy: Never
+      restartPolicy: Always
       imagePullSecrets:
         - name: regcred
-      securityContext: {}
+      securityContext: { }
       serviceAccountName: cloudimanage
