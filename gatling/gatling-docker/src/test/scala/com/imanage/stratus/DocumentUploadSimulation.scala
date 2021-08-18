@@ -16,6 +16,8 @@ class DocumentUploadSimulation extends Simulation {
 
   //  val baseUri = "https://frontend.service.imanagecloud.com"
   private val apiBaseUri = System.getProperty("apiBaseUri", "https://atldev1.imanagelabs.com")
+  private val userEmail = System.getProperty("userEmail", "scaleadmin1@scaletest1.com")
+  private val userPassword = System.getProperty("userPassword", "password")
   private val libraryName = System.getProperty("libraryName", "ATLDEV4POD1")
   private val folderNumber = System.getProperty("folderNumber", "5")
   private val elasticsearchPodName = System.getProperty("elasticsearchPodName", "atldev4pod1")
@@ -25,7 +27,7 @@ class DocumentUploadSimulation extends Simulation {
   private val elasticsearchPassword = System.getProperty("elasticsearchPassword", "kcAcQHMlwAlobmKYfKtRKkyiOe9K7J3b")
   private val sleepTimeUntilElasticsearchQuery = Integer.getInteger("sleepTimeUntilElasticsearchQuery", 30)
 
-  val xAuthToken: String = log_in(apiBaseUri)
+  val xAuthToken: String = log_in(apiBaseUri, userEmail, userPassword)
 
   if (xAuthToken == null) {
     printf("Failed to log in to %s%n", apiBaseUri)
@@ -78,7 +80,7 @@ class DocumentUploadSimulation extends Simulation {
     session
   })
 
-  Document.authenticate(apiBaseUri)
+  Document.authenticate(apiBaseUri, userEmail, userPassword)
 
   private val documentUploads = scenario("Upload Documents").exec(Document.upload(elasticsearchBasePath, elasticsearchUsername, elasticsearchPassword, sleepTimeUntilElasticsearchQuery))
   private val elasticsearchQuery = scenario("Query Elasticsearch").exec(Elasticsearch.queryElasticsearch(elasticsearchBasePath, elasticsearchUsername, elasticsearchPassword))
