@@ -1,0 +1,165 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-test-extraction
+  namespace: cloudimanage
+  labels:
+    app.kubernetes.io/name: load-test-extraction
+    app.kubernetes.io/instance: atldev4-load-test-extraction
+    app.kubernetes.io/version: "0.1.0"
+spec:
+  template:
+    metadata:
+      labels:
+        component: load-test
+        app.kubernetes.io/name: gatling-load-test
+        app.kubernetes.io/instance: atldev4-gatling-load
+        app.kubernetes.io/version: "0.1.0"
+      annotations:
+        "vault.hashicorp.com/agent-inject": "true"
+        "vault.hashicorp.com/agent-init-first": "true"
+        "vault.hashicorp.com/agent-inject-token": "true"
+        "vault.hashicorp.com/agent-pre-populate-only": "true"
+        "vault.hashicorp.com/role": cloudimanage
+        "vault.hashicorp.com/tls-secret": "vault-server-tls"
+        "vault.hashicorp.com/ca-cert": "/vault/tls/vault.ca"
+        "vault.hashicorp.com/agent-inject-secret-s0": "secret/atldev4pod1-mariadb/migrator_credentials"
+        "vault.hashicorp.com/agent-inject-file-s0": "secret/atldev4pod1-mariadb/migrator_credentials"
+        "vault.hashicorp.com/agent-inject-template-s0": |
+          {{- with secret "secret/atldev4pod1-mariadb/migrator_credentials" -}}
+          {{ .Data | toJSON }}
+          {{- end }}
+        "vault.hashicorp.com/agent-inject-secret-s1": "secret/workservice/work_migration/credentials_rw"
+        "vault.hashicorp.com/agent-inject-file-s1": "secret/workservice/work_migration/credentials_rw"
+        "vault.hashicorp.com/agent-inject-template-s1": |
+          {{- with secret "secret/workservice/work_migration/credentials_rw" -}}
+          {{ .Data | toJSON }}
+          {{- end }}
+        "vault.hashicorp.com/agent-inject-secret-s2": "secret/tenantadmin/work_migration/credentials_rw"
+        "vault.hashicorp.com/agent-inject-file-s2": "secret/tenantadmin/work_migration/credentials_rw"
+        "vault.hashicorp.com/agent-inject-template-s2": |
+          {{- with secret "secret/tenantadmin/work_migration/credentials_rw" -}}
+          {{ .Data | toJSON }}
+          {{- end }}
+    spec:
+      containers:
+        - name: atldev4-gatling-load-test
+          securityContext:
+            runAsUser: 0
+            privileged: true
+          image: docker.sretools.io/unverified/adrian/gatling-load:1.0.19
+          command:
+            - sh
+            - -c
+            - |
+              #!/usr/bin/env bash -e
+              /gatling-charts-highcharts-bundle-3.6.1/scripts/entrypoint.sh
+              sleep 36000
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1Gi
+            requests:
+              cpu: 2000m
+              memory: 1Gi
+          env:
+            - name: MEM_LIMIT_BYTES
+              valueFrom:
+                resourceFieldRef:
+                  containerName: atldev4-gatling-load-test
+                  resource: limits.memory
+            - name: "GATLING_SCENARIO"
+              value: "com.imanage.stratus.extraction.performance.ExtractionSimulation"
+            - name: "JAVA_OPTS"
+              value: "-DapiBaseUri=https://extractionhttps.service.imanagecloud.com -DtestDurationSeconds=600 -DconstantConcurrentUsers=10"
+#              value: "-DapiBaseUri=https://atldev4-extraction.cloudimanage.svc.cluster.local -DtestDurationSeconds=600 -DconstantConcurrentUsers=10"
+            - name: "LIBRARY_ID"
+              value: "1379"
+            - name: "LIBRARY_NAME"
+              value: "pauworkactive01japan_b"
+            - name: "CUSTOMER_ID"
+              value: "516"
+            - name: "CUSTOMER_NAME"
+              value: "ScaleTest1"
+            - name: "DEFSERVER"
+              value: "QE"
+            - name: "SOURCE_SCHEMA"
+              value: "pauworkactive01"
+            - name: "SOURCE_JDBC"
+              value: "jdbc:sqlserver://pauworkactive01-sqlserver.service.imanagecloud.com;databaseName=pauworkactive01"
+            - name: "SOURCE_USER"
+              value: "sa"
+            - name: "SOURCE_PASSWORD"
+              value: "Mhdocs123"
+            - name: "MOUNT_USER"
+              value: "centralus1mil"
+            - name: "MOUNT_PASSWORD"
+              value: "yRrNOIrkQW3ufxfevCkYlD9uwbgJcXgu7OdaLZzzYJs/KfNVWuP5brIHyDhnyMrq1kXl9XxgbFzYt2L0Gynddg=="
+            - name: "MOUNT_DEVICE"
+              value: "//centralus1mil.file.core.windows.net/1mil/migration_fs"
+            - name: "NUM_THREADS"
+              value: "6"
+            - name: "NUM_UPLOADER_THREADS"
+              value: "10"
+            - name: "BATCH_SIZE"
+              value: "1000"
+            - name: "STORAGE_SIZE"
+              value: "1000"
+            - name: "UPLOAD_STATUS_BATCH_SIZE"
+              value: "1000"
+            - name: "TERM"
+              value: "dumb"
+            - name: "COUNT_FOLDER_STATS"
+              value: "false"
+            - name: "ENABLE_FILE_UPLOAD_DEBUG_LOG"
+              value: "true"
+            - name: "SKIP_FILE_NAME_VALIDATION"
+              value: "true"
+            - name: "STEP_CONFIG_CHECK"
+              value: "true"
+            - name: "STEP_LIBRARY"
+              value: "false"
+            - name: "STEP_FILE"
+              value: "true"
+            - name: "STEP_DB"
+              value: "false"
+            - name: "STEP_DBUPGRADE"
+              value: "false"
+            - name: "STEP_VALIDATE"
+              value: "false"
+            - name: "STEP_MERGE"
+              value: "false"
+            - name: "STEP_RECOVERY"
+              value: "false"
+            - name: "SKIP_FILE_RECOVERY"
+              value: "false"
+            - name: "STEP_SSID"
+              value: "false"
+            - name: "STEP_USERS"
+              value: "false"
+            - name: "STEP_DBSTRATUS"
+              value: "false"
+          volumeMounts:
+            - name: ca-cert
+              mountPath: /vault-scripts/imanage-ca.crt
+              subPath: imanage-ca.crt
+              readOnly: true
+            - name: set-perm-token
+              mountPath: /vault-scripts/set-perm-token
+              subPath: set-perm-token
+              readOnly: true
+      volumes:
+        - name: ca-cert
+          secret:
+            secretName: ca-tls
+            items:
+              - key: tls.crt
+                path: imanage-ca.crt
+        - name: set-perm-token
+          configMap:
+            name: set-perm-token
+            defaultMode: 0755
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: regcred
+      serviceAccountName: cloudimanage

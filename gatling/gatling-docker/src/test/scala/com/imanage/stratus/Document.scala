@@ -17,8 +17,8 @@ object Document {
 
   var xauthToken: Option[String] = None
 
-  def authenticate: String => Unit = (apiBaseUri: String) => {
-    xauthToken = Option.apply(authToken.authenticate(apiBaseUri))
+  def authenticate: (String, String, String) => Unit = (apiBaseUri: String, userEmail: String, userPassword: String) => {
+    xauthToken = Option.apply(authToken.log_in(apiBaseUri, userEmail, userPassword))
     headers += ("X-Auth-Token" -> s"${xauthToken.get}")
     xauthToken.get
   }
