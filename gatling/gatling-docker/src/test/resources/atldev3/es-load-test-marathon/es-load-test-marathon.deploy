@@ -1,0 +1,51 @@
+deploy:
+  service_name: es-load-test
+  version: 1.0
+  defaults:
+    marathon_deploy:
+      deploy_config:
+        id: es-load-test
+        cmd: null
+        cpus: 0.1
+        mem: 2048
+        disk: 0
+        instances: 1
+        constraints: [["hostname", "UNIQUE"]]
+        ipAddress:
+          networkName: calico-default
+        container:
+          type: DOCKER
+          docker:
+            image: %DOCKER_IMAGE%
+            forcePullImage: true
+            network: USER
+          volumes:
+            - hostPath: /sys/fs/cgroup
+              containerPath: /sys/fs/cgroup
+              mode: RO
+            - hostPath: /usr/local/share/ca-certificates/imanage-ca.crt
+              containerPath: /vault-scripts/imanage-ca.crt
+              mode: RO
+
+  environments:
+    atldev3:
+      deployments:
+        - name: main
+          marathon_deploy:
+            deploy_config:
+              instances: 1
+              ipAddress: null
+              container:
+                docker:
+                  network: BRIDGE
+                  dockerParameters:
+                    - key: entrypoint
+                      value: /gatling-charts-highcharts-bundle-3.6.1/scripts/entrypoint-sleep.sh
+              env:
+                LIBRARY_ID: "888"
+                CUSTOMER_ID: "516"
+                ES_BASE_URL: "https://es7-dev3pod2-elasticsearch.service.imanagecloud.com:9950"
+                POD_NAME: "dev3pod2"
+                SCENARIO_REPEAT_COUNT: "2"
+                VIRTUAL_USERS: "1"
+                GATLING_SCENARIO: "com.imanage.stratus.elasticsearch.performance.query.SingleTermEsQuery"
