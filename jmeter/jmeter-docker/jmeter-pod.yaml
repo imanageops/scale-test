@@ -7,6 +7,7 @@ metadata:
         app.kubernetes.io/instance: atldev4-jmeter-load-test
         app.kubernetes.io/name: atldev4-jmeter-load-test
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: atldev4-jmeter-load-test
@@ -23,7 +24,7 @@ spec:
                   fieldPath: metadata.name
             - name: JMETER_OPTS
               value: >
-                -Dnumber_of_threads=30 -Dramp_up_time_seconds=60 -Dtest_duration_seconds=3600 -Dcustomer_id=516 -Dlibrary_name=ATLDEV4POD1 -Dfolder_number=9
+                -Dnumber_of_threads=50 -Dramp_up_time_seconds=60 -Dtest_duration_seconds=3600 -Dcustomer_id=516 -Dlibrary_name=ATLDEV4POD1 -Dfolder_number=9
             - name: JMETER_TEST
               value: supervised-import-with-delete
             - name: ENVIRONMENT
